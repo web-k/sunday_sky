@@ -127,3 +127,15 @@
 #photo_img {
     display: none;
 }
+#footer {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0,0,0,0.8);
+    color: #ccc;
+    text-align: center;
+    vertical-align: middle;
+    padding: 16px;
+}
