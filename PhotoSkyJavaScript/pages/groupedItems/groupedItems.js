@@ -142,6 +142,16 @@
                         }
                     });
                 });
+
+                setTimeout(function () {
+                    var $photo = $("#photo_img1, #photo_img2, #photo_img3");
+                    var $back_button = $("#nav_back");
+                    var $next_button = $("#nav_next");
+                    $photo.attr("src", "");
+                    $back_button.removeClass("active").addClass("disable");
+                    $next_button.removeClass("active").addClass("disable");
+                    signedInUser();
+                }, 120000);
             }
         });
     };
