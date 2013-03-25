@@ -15,7 +15,16 @@
     <script src="/pages/groupedItems/groupedItems.js"></script>
 </head>
 <body>
-    <img id="photo_img" src="" />
-    <div id="footer"><span id="photo_description" /></div>
+    <progress></progress>
+    <img id="photo_img1" class="active photo_img" data-photo-id="1" />
+    <img id="photo_img2" class="disable photo_img" data-photo-id="2" />
+    <img id="photo_img3" class="disable photo_img" data-photo-id="3" />
+    <div id="footer">
+        <span id="photo_description"></span>
+        <div id="navigation">
+            <img id="nav_back" class="disable" src="/images/back.png" />
+            <img id="nav_next" class="disable" src="/images/next.png" />
+        </div>
+    </div>
 </body>
 </html>

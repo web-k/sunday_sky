@@ -124,8 +124,13 @@
     }
 }
 
-#photo_img {
+progress {
     display: none;
+    width: 100%;
+}
+#photo_img1, #photo_img2, #photo_img3 {
+    display: none;
+    position: absolute;
 }
 #footer {
     display: none;
@@ -139,3 +144,18 @@
     vertical-align: middle;
     padding: 16px;
 }
+#photo_description {
+    height: 16px;
+}
+#navigation {
+    position: absolute;
+    top: 9px;
+    right: 36px;
+}
+    #navigation img {
+        width: 36px;
+        margin-right: 4px;
+    }
+    #navigation img.disable {
+        opacity: 0.3;
+    }
