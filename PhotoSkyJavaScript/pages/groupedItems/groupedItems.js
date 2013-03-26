@@ -79,19 +79,20 @@
                     }
                     last_items = updated_time_sorted_items;
                     if (is_items_updated) {
+                        var $main_content = $("#content");
                         var $back_button = $("#nav_back");
                         var $next_button = $("#nav_next");
                         $back_button.removeClass("active").addClass("disable");
                         $next_button.removeClass("active").addClass("disable");
                         if (is_reloaded) { $("progress").show(); }
-                        $("#photo_img1, #photo_img2, #photo_img3").removeClass("active").addClass("disable").attr("src", "");
+                        $("#photo_img1, #photo_img2, #photo_img3").remove();
                         var photo = updated_time_sorted_items[0];
                         var photo2 = updated_time_sorted_items[1];
                         var photo3 = updated_time_sorted_items[2];
-                        var $photo = $("#photo_img1");
-                        $photo.removeClass("disable").addClass("active");
-                        var $photo2 = $("#photo_img2");
-                        var $photo3 = $("#photo_img3");
+                        var $photo = $('<img id="photo_img1" class="active photo_img" data-photo-id="1" />');
+                        var $photo2 = $(' <img id="photo_img2" class="disable photo_img" data-photo-id="2" />');
+                        var $photo3 = $('<img id="photo_img3" class="disable photo_img" data-photo-id="3" />');
+                        $main_content.append($photo).append($photo2).append($photo3);
                         var window_height = $(window).height();
                         var window_width = $(window).width();
                         if (window_height > window_width) {
@@ -165,7 +166,7 @@
 
                 setTimeout(function () {
                     signedInUser(true);
-                }, 30*1000);
+                }, 10*1000);
             }
         });
     };
