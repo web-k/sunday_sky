@@ -84,8 +84,8 @@
                         var $next_button = $("#nav_next");
                         $back_button.removeClass("active").addClass("disable");
                         $next_button.removeClass("active").addClass("disable");
-                        if (is_reloaded) { $("progress").show(); }
-                        $("#photo_img1, #photo_img2, #photo_img3").remove();
+                        var $showing_photo = $(".photo_img.active").removeClass("active");
+                        $(".photo_img.disable").remove();
                         var photo = updated_time_sorted_items[0];
                         var photo2 = updated_time_sorted_items[1];
                         var photo3 = updated_time_sorted_items[2];
@@ -104,15 +104,14 @@
                             $photo2.width(window_width);
                             $photo3.width(window_width);
                         }
+                        var description = photo.description.length == 0 ? "　" : photo.description;
                         $photo.bind("load", function () {
                             $("progress").fadeOut(1000);
-                            $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px").delay(1000).fadeIn(1500);
+                            $(this).data("description", description).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px").delay(1000).fadeIn(1500, function () { $showing_photo.remove(); });
                             $("#footer").delay(1500).fadeIn(1500);
+                            $("#photo_description").text(description);
                         });
                         $photo.attr("src", photo.source);
-                        var description = photo.description.length == 0 ? "　" : photo.description;
-                        $photo.data("description", description);
-                        $("#photo_description").text(description);
                         $photo2.bind("load", function () {
                             $back_button.removeClass("disable").addClass("active");
                             $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px");
