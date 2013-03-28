@@ -19,7 +19,7 @@
             WL.init();
 
             WL.login({
-                scope: ["wl.signin", "wl.skydrive"],
+                scope: ["wl.signin", "wl.skydrive", "wl.contacts_photos"],
             });
 
         },
@@ -47,7 +47,7 @@
         function (result) {
             App.username = result.name;
         });;
-        var albums_path = "/me/albums";
+        var albums_path = "/me/skydrive/shared/albums";
         WL.api({ path: albums_path, method: "GET" }).then(function (response) {
             var items = response.data;
             var sunday_sky_item = null;
