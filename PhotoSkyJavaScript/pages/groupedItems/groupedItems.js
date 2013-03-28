@@ -30,14 +30,15 @@
     function onLoginComplete() {
       var session = WL.getSession();
       if (!session.error) {
-        signedInUser();
+        signedInUser(false);
       }
     };
     function onLogoutComplete() {
         nav.navigate("/pages/groupedItems/groupedItems.html");
     };
-    function signedInUser() {
-        $("progress").show();
+    var last_items = null;
+    function signedInUser(is_reloaded) {
+        if (!is_reloaded) { $("progress").show(); }
         WL.api({
             path: "/me",
             method: "get"
@@ -66,92 +67,105 @@
                         if (a.updated_time > b.updated_time) return -1;
                         return 0;
                     });
-                    var photo = updated_time_sorted_items[0];
-                    var photo2 = updated_time_sorted_items[1];
-                    var photo3 = updated_time_sorted_items[2];
-                    var $photo = $("#photo_img1");
-                    var $photo2 = $("#photo_img2");
-                    var $photo3 = $("#photo_img3");
-                    var window_height = $(window).height();
-                    var window_width = $(window).width();
-                    if (window_height > window_width) {
-                        $photo.height(window_height);
-                        $photo2.height(window_height);
-                        $photo3.height(window_height);
-                    } else {
-                        $photo.width(window_width);
-                        $photo2.width(window_width);
-                        $photo3.width(window_width);
+                    var is_items_updated = true;
+                    if (is_reloaded) {
+                        for (var i = 0; i < 3; i++) {
+                            is_items_updated = false;
+                            if (updated_time_sorted_items[0].id != last_items[0].id) {
+                                is_items_updated = true;
+                                break;
+                            }
+                        }
                     }
-                    $photo.bind("load", function () {
-                        $("progress").fadeOut(1000);
-                        $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px").delay(1000).fadeIn(1500);
-                        $("#footer").delay(1500).fadeIn(1500);
-                    });
-                    $photo.attr("src", photo.source);
-                    $photo.data("description", photo.description);
-                    $("#photo_description").text(photo.description);
-                    $photo2.bind("load", function () {
-                        $back_button.removeClass("disable").addClass("active");
-                        $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px");
-                    });
-                    $photo2.attr("src", photo2.source);
-                    $photo2.data("description", photo2.description);
-                    $photo2.bind("load", function () {
-                        $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px");
-                    });
-                    $photo3.attr("src", photo3.source);
-                    $photo3.data("description", photo3.description);
+                    last_items = updated_time_sorted_items;
+                    if (is_items_updated) {
+                        var $main_content = $("#content");
+                        var $back_button = $("#nav_back");
+                        var $next_button = $("#nav_next");
+                        $back_button.removeClass("active").addClass("disable");
+                        $next_button.removeClass("active").addClass("disable");
+                        var $showing_photo = $(".photo_img.active").removeClass("active");
+                        $(".photo_img.disable").remove();
+                        var photo = updated_time_sorted_items[0];
+                        var photo2 = updated_time_sorted_items[1];
+                        var photo3 = updated_time_sorted_items[2];
+                        var $photo = $('<img id="photo_img1" class="active photo_img" data-photo-id="1" />');
+                        var $photo2 = $(' <img id="photo_img2" class="disable photo_img" data-photo-id="2" />');
+                        var $photo3 = $('<img id="photo_img3" class="disable photo_img" data-photo-id="3" />');
+                        $main_content.append($photo).append($photo2).append($photo3);
+                        var window_height = $(window).height();
+                        var window_width = $(window).width();
+                        if (window_height > window_width) {
+                            $photo.height(window_height);
+                            $photo2.height(window_height);
+                            $photo3.height(window_height);
+                        } else {
+                            $photo.width(window_width);
+                            $photo2.width(window_width);
+                            $photo3.width(window_width);
+                        }
+                        var description = photo.description.length == 0 ? "　" : photo.description;
+                        $photo.bind("load", function () {
+                            $("progress").fadeOut(1000);
+                            $(this).data("description", description).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px").delay(1000).fadeIn(1500, function () { $showing_photo.remove(); });
+                            $("#footer").delay(1500).fadeIn(1500);
+                            $("#photo_description").text(description);
+                        });
+                        $photo.attr("src", photo.source);
+                        $photo2.bind("load", function () {
+                            $back_button.removeClass("disable").addClass("active");
+                            $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px");
+                        });
+                        $photo2.attr("src", photo2.source);
+                        $photo2.data("description", photo2.description);
+                        $photo3.bind("load", function () {
+                            $(this).css("margin-top", (($(window).height() - $(this).height()) / 2) + "px");
+                        });
+                        $photo3.attr("src", photo3.source);
+                        $photo3.data("description", photo3.description);
 
-                    var $back_button = $("#nav_back");
-                    var $next_button = $("#nav_next");
-                    $back_button.unbind("click").click(function () {
-                        if ($back_button.hasClass("active")) {
-                            var $showing_photo = $(".photo_img.active");
-                            $showing_photo.removeClass("active").addClass("disable");
-                            var showing_photo_id = $showing_photo.data("photo-id");
-                            var $target_photo = $("#photo_img" + (showing_photo_id == "1" ? "2" : "3"));
-                            var description = $target_photo.data("description").length == 0 ? "　" : $target_photo.data("description");
-                            $("#photo_description").text(description);
-                            $target_photo.removeClass("disable").addClass("active");
-                            $(".photo_img").fadeOut(1500);
-                            $target_photo.delay(750).fadeIn(1500);
-                            if (showing_photo_id == "1") {
-                                $next_button.removeClass("disable").addClass("active");
-                            } else {
-                                $back_button.removeClass("active").addClass("disable");
+                        $back_button.unbind("click").click(function () {
+                            if ($back_button.hasClass("active")) {
+                                var $showing_photo = $(".photo_img.active");
+                                $showing_photo.removeClass("active").addClass("disable");
+                                var showing_photo_id = $showing_photo.data("photo-id");
+                                var $target_photo = $("#photo_img" + (showing_photo_id == "1" ? "2" : "3"));
+                                var description = $target_photo.data("description").length == 0 ? "　" : $target_photo.data("description");
+                                $("#photo_description").text(description);
+                                $target_photo.removeClass("disable").addClass("active");
+                                $(".photo_img").fadeOut(1500);
+                                $target_photo.delay(750).fadeIn(1500);
+                                if (showing_photo_id == "1") {
+                                    $next_button.removeClass("disable").addClass("active");
+                                } else {
+                                    $back_button.removeClass("active").addClass("disable");
+                                }
                             }
-                        }
-                    });
-                    $next_button.unbind("click").click(function () {
-                        if ($next_button.hasClass("active")) {
-                            var $showing_photo = $(".photo_img.active");
-                            $showing_photo.removeClass("active").addClass("disable");
-                            var showing_photo_id = $showing_photo.data("photo-id");
-                            var $target_photo = $("#photo_img" + (showing_photo_id == "3" ? "2" : "1"));
-                            var description = $target_photo.data("description").length == 0 ? "　" : $target_photo.data("description");
-                            $("#photo_description").text(description);
-                            $target_photo.removeClass("disable").addClass("active");
-                            $(".photo_img").fadeOut(1500);
-                            $target_photo.delay(750).fadeIn(1500);
-                            if (showing_photo_id == "3") {
-                                $back_button.removeClass("disable").addClass("active");
-                            } else {
-                                $next_button.removeClass("active").addClass("disable");
+                        });
+                        $next_button.unbind("click").click(function () {
+                            if ($next_button.hasClass("active")) {
+                                var $showing_photo = $(".photo_img.active");
+                                $showing_photo.removeClass("active").addClass("disable");
+                                var showing_photo_id = $showing_photo.data("photo-id");
+                                var $target_photo = $("#photo_img" + (showing_photo_id == "3" ? "2" : "1"));
+                                var description = $target_photo.data("description").length == 0 ? "　" : $target_photo.data("description");
+                                $("#photo_description").text(description);
+                                $target_photo.removeClass("disable").addClass("active");
+                                $(".photo_img").fadeOut(1500);
+                                $target_photo.delay(750).fadeIn(1500);
+                                if (showing_photo_id == "3") {
+                                    $back_button.removeClass("disable").addClass("active");
+                                } else {
+                                    $next_button.removeClass("active").addClass("disable");
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 });
 
                 setTimeout(function () {
-                    var $photo = $("#photo_img1, #photo_img2, #photo_img3");
-                    var $back_button = $("#nav_back");
-                    var $next_button = $("#nav_next");
-                    $photo.attr("src", "");
-                    $back_button.removeClass("active").addClass("disable");
-                    $next_button.removeClass("active").addClass("disable");
-                    signedInUser();
-                }, 120000);
+                    signedInUser(true);
+                }, 10*1000);
             }
         });
     };

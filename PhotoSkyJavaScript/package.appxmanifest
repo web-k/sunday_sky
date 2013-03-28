@@ -3,7 +3,7 @@
   <Identity Name="BUILD.41fabfaa-f58b-4b8b-8cb3-e467653775a2" Version="1.0.0.0" Publisher="CN=deepm" />
   <Properties>
     <DisplayName>SundaySky</DisplayName>
-    <PublisherDisplayName>deepm</PublisherDisplayName>
+    <PublisherDisplayName>web-k</PublisherDisplayName>
     <Logo>images\storelogo.png</Logo>
   </Properties>
   <Prerequisites>

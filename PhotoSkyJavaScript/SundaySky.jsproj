@@ -45,6 +45,7 @@
     <TargetPlatformVersion>8.0</TargetPlatformVersion>
     <DefaultLanguage>ja-JP</DefaultLanguage>
     <PackageCertificateKeyFile>PhotoSkyJavaScript_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>C5C089D062AB061B199963F7DB9C74722E675830</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
@@ -73,6 +74,7 @@
     <Content Include="pages\settingsAccountUI\settingsFlyout.js" />
     <Content Include="pages\settingsAccountUI\settingsFlyoutUI.html" />
     <Content Include="Scripts\jquery-1.8.3.js" />
+    <None Include="SundaySky_TemporaryKey.pfx" />
     <None Include="PhotoSkyJavaScript_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
